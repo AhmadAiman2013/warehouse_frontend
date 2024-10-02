@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import "./index.css";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useUser } from './hooks/useAuth';
+import { Toaster } from "@/components/ui/sonner"
 
 
 const queryClient = new QueryClient()
@@ -40,6 +41,7 @@ if (!rootElement.innerHTML) {
       <StrictMode>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} context={{ user }} />
+          <Toaster />
         </QueryClientProvider>
       </StrictMode>
     )

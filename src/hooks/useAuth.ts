@@ -4,12 +4,13 @@ import { jwtDecode } from "jwt-decode";
 import { UserInput } from "@/types/schema/user";
 import { useAuthStore } from "./useAuthStore";
 import { JWT } from "@/types/schema/jwt";
-import { router } from "@/main";
+import { useNavigate } from "@tanstack/react-router";
 
 export const useAuth = () => {
   const setTokens = useAuthStore((state) => state.setTokens);
   const clearTokens = useAuthStore((state) => state.clearTokens);
   const accessToken = useAuthStore((state) => state.accessToken);
+  const navigate = useNavigate()
 
   const loginMutation = useMutation({
     mutationFn: async (data: UserInput) => {
@@ -20,12 +21,14 @@ export const useAuth = () => {
 
   const login = async (data: UserInput) => {
     try {
-      const response: { accessToken: string; refreshToken: string } =
-        await loginMutation.mutateAsync(data);
-        router.navigate({to: '/dashboard'})
-      setTokens(response.accessToken, response.refreshToken);
+      const response: { access: string; refresh: string } = await loginMutation.mutateAsync(data);
+      console.log(response)
+      setTokens(response.access, response.refresh);
+      navigate({to: '/dashboard'})
+      return response
     } catch (err) {
       console.error({ message: "login failed", error: err });
+      return { message: "login failed"}
     }
   };
 
@@ -70,7 +73,7 @@ export const useAuth = () => {
 
   const logout = () => {
     clearTokens()
-    router.navigate({to: '/'})
+    navigate({to: '/'})
   }
 
  

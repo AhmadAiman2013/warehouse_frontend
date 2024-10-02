@@ -6,8 +6,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner"
 
-import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -38,12 +38,13 @@ function Index() {
       const result = await register(data);
       if (result) {
         setAuth("Login");
-        toast({
-          title: `Hi, ${result.username} Please login`,
-        });
+        toast.success(`Hi, ${result.username} Please login`);
       }
     } else {
-      await login(data);
+       const response = await login(data)
+       if (response) {
+         toast.success("Login succeed")
+        }
     }
   };
 
