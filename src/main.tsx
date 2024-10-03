@@ -41,7 +41,7 @@ if (!rootElement.innerHTML) {
       <StrictMode>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} context={{ user }} />
-          <Toaster />
+          <Toaster closeButton/>
         </QueryClientProvider>
       </StrictMode>
     )

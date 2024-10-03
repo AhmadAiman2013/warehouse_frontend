@@ -17,13 +17,37 @@ import {
 } from "@/components/ui/table";
 import InboundDialog from "@/components/inbound/InboundDialogUpdate";
 import InboundDialogCreate from "@/components/inbound/InboundDialogCreate";
+import { Trash2 } from "lucide-react";
+import InventoryDialogCreate from "@/components/inventory/InventoryDialogCreate";
+import InventoryDialogShip from "@/components/inventory/InventoryDialogShip";
+import InventoryDialogUpdate from "@/components/inventory/InventoryDialogUpdate";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
 
 const Dashboard = () => {
+
   const { logout } = useAuth();
   const { inbounds } = useInbound();
   const { outbounds } = useOutbound();
-  const { inventories } = useInventory();
+  const {
+    inventories,
+    deleteInventory,
+    setSearch,
+    clearSearch
+  } = useInventory();
   const user = useUser();
+  const { register, handleSubmit, reset } = useForm<{ search: string }>();
+
+
+  const findSearch = async (data: { search: string }) => {
+    setSearch(data.search);
+  };
+  const clearInput = async () => {
+    reset()
+    clearSearch();
+   
+  };
+
   return (
     <>
       <div className="flex justify-center items-center space-x-4 mt-5 mb-9">
@@ -53,6 +77,7 @@ const Dashboard = () => {
                 <TableHead>Quantity</TableHead>
                 <TableHead>Supplier</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -108,7 +133,20 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="space-y-6 mt-5 mb-10  flex flex-col justify-center w-full">
-        <h2 className="mx-auto text-xl font-semibold">Inventory Management</h2>
+        <div className="flex gap-2 items-center justify-center">
+          <h2 className="text-xl font-semibold">Inventory Management</h2>
+          {user?.role === "manager" && <InventoryDialogCreate />}
+        </div>
+        <div className="flex mx-auto justify-center items-center w-[400px] gap-2">
+          <form onSubmit={handleSubmit(findSearch)} className="flex gap-2">
+            <Input
+              placeholder="PRD001, Electronic, 10"
+              {...register("search")} 
+            />
+            <Button type="submit">Search</Button>
+          </form>
+          <Button onClick={clearInput}>Clear</Button>
+        </div>
         <Table className="mx-auto border border-gray-200 shadow-md rounded-lg w-[1000px] ">
           <TableHeader>
             <TableRow>
@@ -118,6 +156,7 @@ const Dashboard = () => {
               <TableHead>Location</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Supplier</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -129,6 +168,24 @@ const Dashboard = () => {
                 <TableCell>{inventory.location}</TableCell>
                 <TableCell>{inventory.quantity}</TableCell>
                 <TableCell>{inventory.supplier}</TableCell>
+                {user?.role === "manager" && (
+                  <TableCell>
+                    <div className="flex gap-2 items-center">
+                      <InventoryDialogUpdate {...inventory} />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteInventory(inventory.id)}
+                      >
+                        <Trash2 size="20" />
+                      </Button>
+                      <InventoryDialogShip
+                        sku={inventory.sku}
+                        initialQuantity={inventory.quantity}
+                      />
+                    </div>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

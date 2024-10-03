@@ -10,15 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,10 +22,10 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import {
-  InboundDataInput,
-  InboundFormSchemaCreate,
-} from "@/types/schema/inbound";
-import { useInbound } from "@/hooks/useInbound";
+  InventoryDataInput,
+  InventoryFormSchema,
+} from "@/types/schema/inventory";
+import { useInventory } from "@/hooks/useInventory";
 import { PlusIcon } from "lucide-react";
 
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -50,26 +41,29 @@ import {
 import { useState } from "react";
 import { Label } from "../ui/label";
 
-const InboundDialogCreate = () => {
-  const { createInbound, isPendingCreate } = useInbound();
+const InventoryDialogCreate = () => {
+  const { createInventory, isPendingCreate } = useInventory();
   const [date, setDate] = useState<Date>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const form = useForm<InboundDataInput>({
-    resolver: zodResolver(InboundFormSchemaCreate),
+  const form = useForm<InventoryDataInput>({
+    resolver: zodResolver(InventoryFormSchema),
     defaultValues: {
       sku: "",
       supplier: "",
+      category: "",
+      name: "",
+      location: "",
     },
   });
 
-  const onSubmit = async (data: InboundDataInput) => {
+  const onSubmit = async (data: InventoryDataInput) => {
     if (date) {
       const modifiedData = {
         ...data,
         date: format(date, "yyyy-MM-dd"),
       };
-      const response = await createInbound(modifiedData);
+      const response = await createInventory(modifiedData);
       if (!("message" in response)) {
         toast.success("Data create succeeded");
         setIsDialogOpen(false);
@@ -89,9 +83,9 @@ const InboundDialogCreate = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Inbound</DialogTitle>
+          <DialogTitle>Create Inventory</DialogTitle>
           <DialogDescription>
-            Input some data to be recorded in inbound
+            Input some data to be recorded in inventory
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -146,79 +140,40 @@ const InboundDialogCreate = () => {
 
             <FormField
               control={form.control}
-              name="status"
+              name="name"
               render={({ field }) => (
-                <>
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue
-                            placeholder="Select a status"
-                            {...field}
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="received">Received</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                  {form.formState.errors.status && (
-                    <span>{form.formState.errors.status.message}</span>
-                  )}
-
-                  {field.value === "received" && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Category</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="location"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Location</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </>
-                  )}
-                </>
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <div className="flex flex-col">
               <Label className="mb-2">Date</Label>
               <Popover>
@@ -257,4 +212,4 @@ const InboundDialogCreate = () => {
   );
 };
 
-export default InboundDialogCreate;
+export default InventoryDialogCreate;

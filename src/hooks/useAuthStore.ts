@@ -26,3 +26,17 @@ export const useAuthStore = create<AuthState>()(
         }
     )
 )
+
+interface SearchState {
+    search: string | ""
+    setSearch: (search: string) => void
+    clearSearch: () => void
+}
+
+export const useSearchStore = create<SearchState>()(
+    (set) => ({
+        search: "",
+        setSearch: (search) => set({search}),
+        clearSearch: () => set({search: ""})
+    })
+)
