@@ -15,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import InboundDialog from "@/components/inbound/InboundDialogUpdate";
+import InboundDialogCreate from "@/components/inbound/InboundDialogCreate";
 
 const Dashboard = () => {
   const { logout } = useAuth();
@@ -38,7 +40,10 @@ const Dashboard = () => {
       </div>
       <div className="flex justify-around">
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold">Inbound Management</h2>
+          <div className="flex gap-2 items-center">
+            <h2 className="text-xl font-semibold">Inbound Management</h2>
+            {user?.role === "manager" && <InboundDialogCreate />}
+          </div>
           <Table className="border border-gray-200 shadow-md rounded-lg">
             <TableHeader>
               <TableRow>
@@ -63,7 +68,7 @@ const Dashboard = () => {
                   <TableCell>{inbound.status}</TableCell>
                   {user?.role === "manager" && inbound.status == "pending" && (
                     <TableCell>
-                      <Button>Received</Button>
+                      <InboundDialog id={inbound.id} action="Received" />
                     </TableCell>
                   )}
                 </TableRow>
