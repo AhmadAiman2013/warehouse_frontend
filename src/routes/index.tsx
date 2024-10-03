@@ -58,7 +58,7 @@ function Index() {
     <div className="w-full grid min-h-[600px] grid-cols-2">
       <div className="hidden bg-muted lg:block">
         <img
-          src="public\wms.webp"
+          src="/wms.webp"
           alt="Image"
           width={1920}
           height={1080}
