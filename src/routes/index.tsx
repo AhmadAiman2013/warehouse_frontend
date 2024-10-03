@@ -42,8 +42,10 @@ function Index() {
       }
     } else {
        const response = await login(data)
-       if (response) {
+       if (!('message' in response)) {
          toast.success("Login succeed")
+        } else {
+          toast.warning("login failed")
         }
     }
   };
