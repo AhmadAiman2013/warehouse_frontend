@@ -14,7 +14,7 @@ export const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: async (data: UserInput) => {
-      const response = await axiosJWT.post("/token/", data);
+      const response = await axiosJWT.post("/token", data);
       return response.data;
     },
   });
@@ -34,7 +34,7 @@ export const useAuth = () => {
 
   const registerMutation = useMutation({
     mutationFn: async (data: UserInput) => {
-      const response = await axiosJWT.post("/user/register/", data);
+      const response = await axiosJWT.post("/user/register", data);
       return response.data;
     },
   })
