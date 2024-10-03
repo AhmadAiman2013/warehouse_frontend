@@ -15,7 +15,7 @@ export const useInventory = () => {
         queryKey: ['inventory', search], 
         queryFn: async () => {
             try {
-                const response = await axiosJWT.get<InventoryData[]>(`/inventory/list/?search=${search}`);
+                const response = await axiosJWT.get<InventoryData[]>(`/inventory/list/?search=${search}/`);
                 console.log(response.data)
                 return response.data;
             } catch (err) {
@@ -28,7 +28,7 @@ export const useInventory = () => {
    
     const {mutateAsync : createInventoryMutation, isPending : isPendingCreate} = useMutation({
         mutationFn: async (data: InventoryDataInput) => {
-            const response = await axiosJWT.post('/inventory', data)
+            const response = await axiosJWT.post('/inventory/', data)
             return response.data
         },
         onSuccess: () => {
@@ -46,7 +46,7 @@ export const useInventory = () => {
         }
     }
     const {mutateAsync: deleteInventoryMutation, isPending : isPendingDelete } = useMutation({
-        mutationFn: async (id : number) => await axiosJWT.delete(`/inventory/${id}`), 
+        mutationFn: async (id : number) => await axiosJWT.delete(`/inventory/${id}/`), 
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey:['inventory']})
             queryClient.invalidateQueries({queryKey:['inbound']})
@@ -63,7 +63,7 @@ export const useInventory = () => {
     const {mutateAsync: updateInventoryMutation, isPending: isPendingUpdate} = useMutation({
         mutationFn: async (data : InventoryData) => {
             console.log(data)
-            const response = await axiosJWT.put(`/inventory/${data.id}`, data)
+            const response = await axiosJWT.put(`/inventory/${data.id}/`, data)
             return response.data
         },
         onSuccess: () => {
@@ -83,7 +83,7 @@ export const useInventory = () => {
 
     const {mutateAsync : shipInventoryMutation, isPending : isPendingShip} = useMutation({
         mutationFn: async (data: InventoryShipdataInput) => {
-            const response = await axiosJWT.post('/outbound', data)
+            const response = await axiosJWT.post('/outbound/', data)
             return response.data
         },
         onSuccess: () => {

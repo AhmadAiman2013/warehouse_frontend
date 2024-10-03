@@ -8,7 +8,7 @@ export const useOutbound = () => {
         queryKey: ['outbound'],
         queryFn: async () => {
             try {
-                const response = await axiosJWT.get<OutboundData[]>('/outbound')
+                const response = await axiosJWT.get<OutboundData[]>('/outbound/')
                 return response.data
             } catch(err) {
                 console.error({message: 'inbound data failed to retrived', error: err})
