@@ -3,7 +3,7 @@ import { useAuthStore } from '@/hooks/useAuthStore'
 import { router } from '@/main'
 
 export const axiosJWT = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL}/api`
+    baseURL: `https://apiwarehouse.ahmdaimn.xyz/api`
 })
 
 axiosJWT.interceptors.request.use(
