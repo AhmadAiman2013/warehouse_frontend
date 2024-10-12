@@ -22,7 +22,6 @@ export const useAuth = () => {
   const login = async (data: UserInput) => {
     try {
       const response: { access: string; refresh: string } = await loginMutation.mutateAsync(data);
-      console.log(response)
       setTokens(response.access, response.refresh);
       navigate({to: '/dashboard'})
       return response

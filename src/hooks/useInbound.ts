@@ -9,7 +9,7 @@ export const useInbound = () => {
         queryKey: ['inbound'],
         queryFn: async () => {
             try {
-                const response = await axiosJWT.get<InboundData[]>('/inbound/')
+                const response = await axiosJWT.get<InboundData[]>('/inbound')
                 return response.data
             } catch(err) {
                 console.error({message: 'inbound data failed to retrived', error: err})
@@ -19,7 +19,7 @@ export const useInbound = () => {
 
     const {mutateAsync : updateInboundMutation, isPending : isPendingUpdate} = useMutation({
         mutationFn: async (data: InboundDataReceived) => {
-            const response = await axiosJWT.put(`/inbound/${data.id}/`, data);
+            const response = await axiosJWT.put(`/inbound/${data.id}`, data);
             return response.data
         },
         onSuccess: () => {
@@ -39,8 +39,7 @@ export const useInbound = () => {
 
     const {mutateAsync : createInboundMutation, isPending : isPendingCreate} = useMutation({
         mutationFn: async (data: InboundDataInput) => {
-            console.log(data)
-            const response = await axiosJWT.post('/inbound/', data)
+            const response = await axiosJWT.post('/inbound', data)
             return response.data
         },
         onSuccess: () => {
